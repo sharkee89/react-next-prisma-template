@@ -1,0 +1,50 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(cuid())
+  sessions     Session[]
+  firstName    String
+  lastName     String
+  email        String    @unique
+  passwordHash String
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  userId    String
+  user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
+}
+
+model DataObject {
+  id         String     @id @default(cuid())
+  name       String
+  properties Property[]
+  instances  Instance[]
+}
+
+model Property {
+  id         String     @id @default(cuid())
+  name       String
+  type       String     // Can be 'string', 'number', etc.
+  dataObject DataObject @relation(fields: [dataObjectId], references: [id], onDelete: Cascade)
+  dataObjectId String
+}
+
+model Instance {
+  id         String     @id @default(cuid())
+  name       String
+  values     Json       // This will hold the values for the properties as a JSON object
+  dataObject DataObject @relation(fields: [dataObjectId], references: [id], onDelete: Cascade)
+  dataObjectId String
+}

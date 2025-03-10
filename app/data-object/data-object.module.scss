@@ -1,0 +1,21 @@
+.dataObjectPage {
+  display: flex;
+  gap: 0.5rem;
+  
+  & > div {
+    flex: 1;
+
+    // To ensure the second div has a min-height equal to the first div
+    &:nth-child(2) {
+      min-height: 100%;  // Ensures it stretches to fill the height of the first div
+    }
+  }
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+
+    & > div {
+      min-height: 0; // Reset min-height for stacking vertically
+    }
+  }
+}
